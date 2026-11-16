@@ -40,31 +40,39 @@ canvas.gc{width:100%;display:block;image-rendering:pixelated;background:#000;tou
 <script>
 /* ===== EDIT ME (Fay) ===== */
 const FAY={q:'#f6cfa8',z:'#3b2160',S:'#c04a8a'}; // Fay: skin, top colour, sketchbook cover — change freely
-const GALLERY=[]; // Fay’s artwork that EVERYONE sees, e.g. ['art/drawing1.png','art/drawing2.jpg'] (files uploaded next to index.html)
+const GALLERY=[]; // Our gallery — artwork and pictures from both of us
 const OPEN_BIRTHDAY_EARLY=false;               // true = birthday door open without winning
 const LETTER=`« Cueillez, cueillez votre jeunesse. »
 — Pierre de Ronsard
 (Gather, gather your youth.)
 
-Dear Rondy,
+**Dear Rondy,**
 
-Twenty-two. I keep turning the number over like a smooth stone, trying to decide what it weighs, and every time it comes out the same: about as much as a good evening.
+May twenty-two be kind to you.
 
-Three years ago a message arrived from someone I hadn’t met yet, and without announcing itself it became one of the steady things in my life. Since then there have been Roblox lobbies, the Brawl Stars days, movies, anime, a list of things we keep swearing we’ll watch, and “ggs”, which somehow works as hello, goodbye and thank you all at once.
+May the days ahead bring you little wonders, unexpected happiness, and moments so lovely you'll wish to keep them forever.
 
-I think about the way you are with people. You are funny without being cruel, calm without being distant, and generous in the quiet way that never keeps a record. You have always looked at my drawings and my poems as though they mattered. I don’t think you know what that did. Maybe you do.
+May you never run out of reasons to laugh, places to discover, or dreams worth chasing. And when life feels uncertain, may you always find your way towards something beautiful.
 
-I made this little world because a birthday should have rooms, and doors, and a few secrets behind the posters. Anyone can send a message. I wanted to build you a place.
+Some people come and go like passing seasons. I'm glad our paths crossed, and I hope this one brings you nothing but good things.
 
-So wander, win, take your time. And when the cake is dark and the night has gone quiet, know that somewhere a friend is glad, plainly and without any fuss, that you were born.
-
-Happy birthday, Twin. Twenty-two looks good on you.
+**Happy birthday, Twin.**
+May this year be a lovely chapter in the story of you.
 
 — Fay`;
 /* ========================== */
 const $=s=>document.querySelector(s),st=$('#stage'),R=(a,b)=>a+Math.random()*(b-a),rep=(n,f)=>Array.from({length:n},(_,i)=>f(i)).join('');
 const LS={g:(k,d)=>{try{return JSON.parse(localStorage.getItem('rw_'+k))??d}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem('rw_'+k,JSON.stringify(v))}catch(e){}}};
-const S={inv:LS.g('inv',[]),poems:LS.g('poems',[0,0,0,0]),tv:LS.g('tv',[{n:'Chronicle',t:'Movie',w:1},{n:'Hell’s Paradise',t:'Anime',w:0}]),mu:LS.g('mu',[{t:'Go Back Home',a:'Yeat',u:''},{t:'(pick a song)',a:'Steve Lacy',u:''},{t:'(pick a song)',a:'Joji',u:''}]),gb:LS.g('gb',[]),gal:LS.g('gal',[]),mute:0,x:100};
+// Default playlist. These YouTube search links open the matching song results.
+const MUSIC_DEFAULTS=[
+ {t:'Back Home',a:'Yeat ft. Joji',u:'https://www.youtube.com/results?search_query=Yeat+Back+Home+feat+Joji+official'},
+ {t:'Bad Habit',a:'Steve Lacy',u:'https://www.youtube.com/watch?v=VF-FGf_ZZiI'},
+ {t:'Dark Red',a:'Steve Lacy',u:'https://www.youtube.com/results?search_query=Steve+Lacy+Dark+Red+official'},
+ {t:'Glimpse of Us',a:'Joji',u:'https://www.youtube.com/results?search_query=Joji+Glimpse+of+Us+official'},
+ {t:'SLOW DANCING IN THE DARK',a:'Joji',u:'https://www.youtube.com/results?search_query=Joji+SLOW+DANCING+IN+THE+DARK+official'},
+ {t:'Sanctuary',a:'Joji',u:'https://www.youtube.com/results?search_query=Joji+Sanctuary+official'}
+];
+const S={inv:LS.g('inv',[]),poems:LS.g('poems',[0,0,0,0]),tv:LS.g('tv',[{n:'Chronicle',t:'Movie',w:1},{n:'Hell’s Paradise',t:'Anime',w:0}]),mu:LS.g('mu_v2',MUSIC_DEFAULTS),gb:LS.g('gb',[]),gal:LS.g('gal',[]),mute:0,x:100};
 const PAL={r:'#d62839',p:'#ffb3c6',y:'#ffe27a',o:'#f08a24',b:'#2a1a2a',w:'#fff6e5',c:'#b9a8d8',f:'#f28c3a',s:'#8fb4d9',e:'#1d1d2b',n:'#26305c',k:'#7a4b2d',d:'#5e3820',h:'#1a110e',g:'#2b2f55',l:'#d8ecff',m:'#3b1e12',u:'#a9d6ff',q:FAY.q,z:FAY.z,S:FAY.S,K:'#15101c',H:'#3d2d5c',M:'#8a2b5c',C:'#0e0a14',P:'#ff7fb0',V:'#1c1230',T:'#6a3fa0',B:'#0e0a14',W:'#fff6e5',a:'#9b6a3c',j:'#c98f55',t:'#fff1d6',i:'#8c1c2c',G:'#3ddc84',L:'#cbb8ff'};
 const RON=["...h.h.h.h..","..hhhhhhhh..","..hhhhhhhh..","..hkkkkkkh..","..kkkkkkkk..","..gggkkggg..","..glekkelg..","..kkkdkkkk..","..kkmmmmkk..","...dkkkkd...","....dkkd....",".rrrrrrrrrr.","rrrrrrrrrrrr","rrrrppppprrr","rrrrrrrrrrrr","dkrrrrrrrrkd",".nnnnnnnnnn.",".nnnn..nnnn.",".nnnn..nnnn.",".nnnn..nnnn.",".wwww..wwww."];
 const FA=["...KKKKKK...","..KKKHKKKK..",".KKKKKKKKKK.",".KKKqqqqqKK.",".KKqqqqqqKK.",".KKqeqqeqKK.",".KKpqqqqpKK.",".KKqqMMqqKK.",".KKKqqqqKKK.",".KKKCCCCKKK.","KKzzzzzzzzKK","KKzzzPPzzzKK",".KzzzzzzzSSW","qzzzzzzzzSSW","..VVVVVVVSSq","..VVVVVVVV..","..PPPPPPPP..","...TT..TT...","...VV..VV...","...TT..TT...","..BBB..BBB.."];
@@ -152,9 +160,9 @@ function tvApp(){const rend=()=>{const L=S.tv;$('#tl').innerHTML=L.map((e,i)=>`<
 win('WatchPlayer 2007 — Our Library',`<div class="lib">▶ NOW SHOWING: <span id="tc"></span><br>“Some stories are better when watched together.”</div><div id="tl" style="max-height:34vh;overflow:auto;margin:8px 0;border:2px inset #d9cdb0"></div><div style="display:flex;gap:5px;flex-wrap:wrap"><input id="tn" placeholder="Movie or anime name" style="flex:1;min-width:120px"><select id="tt"><option>Movie</option><option>Anime</option></select><button class="pb" onclick="const n=$('#tn').value.trim();if(n){S.tv.push({n,t:$('#tt').value,w:0});LS.s('tv',S.tv);$('#tn').value='';tvr();snd(700)}">+ Add</button></div>`);rend()}
 /* ---- MUSIC ---- */
 function musicApp(){let sel=-1,ed=-1;const isA=u=>/\.(mp3|ogg|wav|m4a)(\?|$)/i.test(u);
-const rend=()=>{$('#ml').innerHTML=S.mu.map((m,i)=>`<div class="ln ${i==sel?'on':''}"><b>${m.a?m.a+' — ':''}${m.t||'Untitled'}</b><small>${m.u?'':'no link yet'}</small><button class="pb" onclick="mp(${i})">${m.u?'▶ Open':'✎ Add link'}</button><button class="pb bl" style="padding:3px 6px" onclick="S.mu.splice(${i},1);LS.s('mu',S.mu);mr()">✕</button></div>`).join('')||'<p class="ph">No songs yet.</p>';$('#mn').innerHTML=sel>=0?`♪ ${S.mu[sel].a||''} — ${S.mu[sel].t}`:'♪ nothing playing. press ▶ on a song.';$('#eqb').style.opacity=sel>=0?1:.25};window.mr=rend;
+const rend=()=>{$('#ml').innerHTML=S.mu.map((m,i)=>`<div class="ln ${i==sel?'on':''}"><b>${m.a?m.a+' — ':''}${m.t||'Untitled'}</b><small>${m.u?'':'no link yet'}</small><button class="pb" onclick="mp(${i})">${m.u?'▶ Open':'✎ Add link'}</button><button class="pb bl" style="padding:3px 6px" onclick="S.mu.splice(${i},1);LS.s('mu_v2',S.mu);mr()">✕</button></div>`).join('')||'<p class="ph">No songs yet.</p>';$('#mn').innerHTML=sel>=0?`♪ ${S.mu[sel].a||''} — ${S.mu[sel].t}`:'♪ nothing playing. press ▶ on a song.';$('#eqb').style.opacity=sel>=0?1:.25};window.mr=rend;
 window.mp=i=>{const m=S.mu[i];if(!m.u){ed=i;$('#mt').value=m.t.startsWith('(')?'':m.t;$('#ma').value=m.a;$('#mu').focus();say('Paste a link for this song, then press Save.');return}sel=i;$('#au').innerHTML=isA(m.u)?`<audio controls src="${m.u}" style="width:100%"></audio>`:`<a class="pb" style="text-decoration:none;display:inline-block" href="${m.u}" target="_blank" rel="noopener">↗ Open the song in a new tab</a>`;rend();snd(500)};
-window.ms=()=>{const u=$('#mu').value.trim(),t=$('#mt').value.trim(),a=$('#ma').value.trim();if(!u&&!t)return say('Add a link or a title first.');if(ed>=0){Object.assign(S.mu[ed],{u,t:t||S.mu[ed].t,a:a||S.mu[ed].a});ed=-1}else S.mu.push({u,t:t||'Untitled',a});LS.s('mu',S.mu);['mu','mt','ma'].forEach(k=>$('#'+k).value='');rend();snd(800)};
+window.ms=()=>{const u=$('#mu').value.trim(),t=$('#mt').value.trim(),a=$('#ma').value.trim();if(!u&&!t)return say('Add a link or a title first.');if(ed>=0){Object.assign(S.mu[ed],{u,t:t||S.mu[ed].t,a:a||S.mu[ed].a});ed=-1}else S.mu.push({u,t:t||'Untitled',a});LS.s('mu_v2',S.mu);['mu','mt','ma'].forEach(k=>$('#'+k).value='');rend();snd(800)};
 win('Winamp-ish Player 1.0',`<div class="lib"><div id="mn"></div><div class="eq" id="eqb">${rep(16,i=>`<i style="animation-delay:${i*.07}s"></i>`)}</div></div><div id="au" style="margin:6px 0"></div><div id="ml" style="max-height:26vh;overflow:auto;border:2px inset #d9cdb0"></div><div style="display:grid;gap:4px;margin-top:6px"><input id="mu" placeholder="Paste a song link (YouTube, Spotify, mp3...)"><div style="display:flex;gap:4px"><input id="mt" placeholder="Title (optional)" style="flex:1"><input id="ma" placeholder="Artist (optional)" style="flex:1"></div><button class="pb" onclick="ms()">💾 Save to playlist</button></div><small>Nothing plays until you press play. Links that can’t be played here open in a new tab.</small>`);rend()}
 /* ---- computer apps ---- */
 function guest(){const r=()=>{$('#gl').innerHTML=S.gb.map(g=>`<div class="ln"><b>${g.n}:</b> ${g.m}</div>`).join('')||'<p class="ph">No signatures yet. Be the first.</p>'};win('Guestbook.exe',`<div id="gl" style="max-height:30vh;overflow:auto;margin-bottom:6px"></div><input id="gn" placeholder="Your name" value="Rondy"><br><textarea id="gm" rows="3" style="width:100%" placeholder="Leave a message…"></textarea><button class="pb" onclick="const m=$('#gm').value.trim();if(m){S.gb.push({n:$('#gn').value||'Rondy',m});LS.s('gb',S.gb);$('#gm').value='';guest()}">✍ Sign</button>`);r()}
